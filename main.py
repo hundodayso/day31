@@ -2,8 +2,10 @@ from tkinter import *
 from tkinter import messagebox
 import pandas as pd
 import random
+import time
 
 BACKGROUND_COLOR = "#B1DDC6"
+
 
 word_data = pd.read_csv('data/french_words.csv')
 word_dict = word_data.to_dict(orient="records")
@@ -12,15 +14,20 @@ word_dict = word_data.to_dict(orient="records")
 
 
 def next_card():
-
-    current_card = word_data.sample()
-    french_word = words['French'].values[0]
-    english_word = words['English'].values[0]
+    #canvas.itemconfig(card_image, image=front_img)
+    current_words = word_data.sample()
+    french_word = current_words['French'].values[0]
+    english_word = current_words['English'].values[0]
     canvas.itemconfig(card_title, text="French")
     canvas.itemconfig(card_word, text=f"{french_word}")
+    time.sleep(1)
+    canvas.itemconfig(card_image, image=back_img)
+    canvas.itemconfig(card_image, image=front_img)
+
+
 
 # def next_card():
-#     current_card = random.choice(word_dict)
+#     current_words = random.choice(word_dict)
 #
 #     french_word = current_card
 #     canvas.itemconfig(card_title, text="French")
@@ -38,9 +45,11 @@ canvas = Canvas(width=1000, height=600)
 canvas.config(bg=BACKGROUND_COLOR, highlightthickness=0)
 
 front_img = PhotoImage(file="images/card_front.png")
-canvas.create_image(500, 300, image=front_img)
+back_img = PhotoImage(file="images/card_back.png")
+
+card_image = canvas.create_image(500, 300, image=front_img)
 card_title = canvas.create_text(500, 150, text="French", font=("Ariel", 30, "italic"))
-card_word = canvas.create_text(500, 300, text="Oui", font=("Arial", 35, "bold"))
+card_word = canvas.create_text(500, 300, text="Placeholder", font=("Arial", 35, "bold"))
 
 canvas.grid(column=0, row=0, columnspan=2)
 
