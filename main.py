@@ -11,18 +11,19 @@ word_data = pd.read_csv('data/french_words.csv')
 word_dict = word_data.to_dict(orient="records")
 
 ####-------------words----------------####
+current_words = []
 
 
 def next_card():
-    #canvas.itemconfig(card_image, image=front_img)
+
+    global current_words
     current_words = word_data.sample()
+    print(type(current_words))
     french_word = current_words['French'].values[0]
     english_word = current_words['English'].values[0]
     canvas.itemconfig(card_title, text="French")
     canvas.itemconfig(card_word, text=f"{french_word}")
-    time.sleep(1)
-    canvas.itemconfig(card_image, image=back_img)
-    canvas.itemconfig(card_image, image=front_img)
+
 
 
 
@@ -33,13 +34,16 @@ def next_card():
 #     canvas.itemconfig(card_title, text="French")
 #     canvas.itemconfig(card_word, text=current_card["French"])
 
-
+def flip_card():
+    canvas.itemconfig(card_title, text="English")
+    canvas.itemconfig(canvas_image, image=back_img)
 
 
 window = Tk()
 window.title("Flashcards!")
 window.config(background=BACKGROUND_COLOR, padx=50, pady=50)
 
+window.after(3000, func=flip_card)
 
 canvas = Canvas(width=1000, height=600)
 canvas.config(bg=BACKGROUND_COLOR, highlightthickness=0)
@@ -47,7 +51,9 @@ canvas.config(bg=BACKGROUND_COLOR, highlightthickness=0)
 front_img = PhotoImage(file="images/card_front.png")
 back_img = PhotoImage(file="images/card_back.png")
 
-card_image = canvas.create_image(500, 300, image=front_img)
+canvas_image = canvas.create_image(500, 300, image=back_img)
+
+canvas.itemconfig(canvas_image, image=front_img)
 card_title = canvas.create_text(500, 150, text="French", font=("Ariel", 30, "italic"))
 card_word = canvas.create_text(500, 300, text="Placeholder", font=("Arial", 35, "bold"))
 
@@ -65,6 +71,9 @@ button.grid(column=1, row=2)
 
 
 next_card()
+
+
+
 
 
 window.mainloop()
